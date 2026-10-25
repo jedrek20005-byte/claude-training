@@ -1,0 +1,38 @@
+# Trading bot settings. Secrets (API keys, passwords) go in .env, never here.
+
+# Money the bot is allowed to use, in USD. 20 PLN is roughly 5.50 USD.
+# The bot only trades with this amount, even if the paper account holds more.
+capital_usd: 5.50
+
+# How many stocks to hold at the same time (money is split equally).
+max_positions: 4
+
+# Smallest order Alpaca accepts for fractional shares.
+min_order_usd: 1.00
+
+# Insider-buying signal (SEC Form 4, open-market purchases only).
+signals:
+  lookback_days: 14            # insiders must buy within this many days of each other
+  min_insiders: 2              # "cluster" = at least this many different insiders buying
+  min_value_per_insider: 25000 # each insider must buy at least this much (USD)
+  min_cluster_value: 100000    # all insiders together must buy at least this much (USD)
+  solo_ceo_cfo_min_value: 250000 # a CEO/CFO buying alone also counts if at least this much
+  min_price: 5.0               # skip penny stocks
+  max_signal_age_days: 4       # only act on signals filed in the last few days
+
+# When to sell.
+exits:
+  max_hold_days: 60            # sell after this many calendar days
+  trailing_stop_pct: 0.15      # sell if price falls 15% below its highest close since buying
+  take_profit_pct: null        # e.g. 0.30 to sell at +30%; null = let winners run
+  rebuy_cooldown_days: 30      # don't buy the same stock again soon after selling it
+
+# Emergency stop: sell everything and stop trading if the bot's money
+# falls this far below the starting capital.
+kill_switch_drawdown: 0.25
+
+# How many days of SEC filings to scan each run (must cover lookback_days).
+scan_days: 16
+
+# Assumed cost per trade side in the backtest (spread + slippage).
+backtest_slippage: 0.002
